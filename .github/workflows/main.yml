@@ -1,1 +1,31 @@
-
+name: TITAN AI V45 APK
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble V45 source
+        run: |
+          mkdir -p app/src/main/python
+          cat v45_parts/part*.py > app/src/main/python/titan_v45.py
+          python3 -m py_compile app/src/main/python/titan_v45.py
+      - uses: android-actions/setup-android@v3
+      - run: yes | sdkmanager --licenses >/dev/null || true
+      - run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Build APK
+        run: gradle --no-daemon --stacktrace assembleRelease
+      - uses: actions/upload-artifact@v4
+        with:
+          name: TITAN_AI_V45_APK
+          path: app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
