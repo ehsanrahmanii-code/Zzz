@@ -9,9 +9,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Assemble V45 source
+        shell: bash
         run: |
           mkdir -p app/src/main/python
-          cat v45_final/part*.py > app/src/main/python/titan_v45.py
+          : > app/src/main/python/titan_v45.py
+          for f in v45_final/part*.py; do cat "$f" >> app/src/main/python/titan_v45.py; printf '\n' >> app/src/main/python/titan_v45.py; done
           python3 -m py_compile app/src/main/python/titan_v45.py
       - uses: android-actions/setup-android@v3
       - run: yes | sdkmanager --licenses >/dev/null || true
