@@ -11,7 +11,7 @@ jobs:
       - name: Assemble V45 source
         run: |
           mkdir -p app/src/main/python
-          cat v45_clean/part*.py > app/src/main/python/titan_v45.py
+          cat v45_final/part*.py > app/src/main/python/titan_v45.py
           python3 -m py_compile app/src/main/python/titan_v45.py
       - uses: android-actions/setup-android@v3
       - run: yes | sdkmanager --licenses >/dev/null || true
