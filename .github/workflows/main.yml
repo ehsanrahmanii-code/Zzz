@@ -27,7 +27,10 @@ jobs:
           cache: gradle
       - uses: gradle/actions/setup-gradle@v4
       - name: Build APK
-        run: gradle --no-daemon --stacktrace assembleRelease
+        run: |
+          curl -L --fail -o /tmp/gradle.zip https://services.gradle.org/distributions/gradle-8.13-bin.zip
+          unzip -q /tmp/gradle.zip -d /tmp
+          /tmp/gradle-8.13/bin/gradle --no-daemon --stacktrace assembleRelease
       - uses: actions/upload-artifact@v4
         with:
           name: TITAN_AI_V45_APK
